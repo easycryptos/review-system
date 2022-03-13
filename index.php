@@ -288,7 +288,7 @@ $(document).ready(function(){
                     {
                        html += '<div class="row mb-3">';
 
-                        html += '<div class="col-sm-1"><div  class="img-circle" img src="" <h3 class="text-center">'+data.review_data[count].user_name+'</h3></div></div>';
+                        html += '<div class="col-sm-1"><div class="rounded mx-auto d-block"><img  class="avatar" src="'+data.review_data[count].user_avatar+'"  width="90px" height="90px" alt="Gravatar de '+data.review_data[count].user_name+'"<h3 class="text-center">'+data.review_data[count].user_name+'</h3></div></div>';
 
                         html += '<div class="col-sm-11">';
 

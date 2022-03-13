@@ -1,0 +1,61 @@
+/*
+  Responsive layout
+*/
+@font-face {
+  font-family: 'Pacifico';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Pacifico Regular'), local('Pacifico-Regular'), url(https://fonts.gstatic.com/s/pacifico/v12/FwZY7-Qmy14u9lezJ-6H6MmBp0u-.woff2) format('woff2');
+  font-display: swap;
+}
+body{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 18px;
+
+}
+.progress-label-left
+
+{
+
+    float: left;
+
+    margin-right: 0.5em;
+
+    line-height: 1em;
+
+}
+
+.progress-label-right
+
+{
+
+    float: right;
+
+    margin-left: 0.3em;
+
+    line-height: 1em;
+
+}
+
+.star-light
+
+{
+
+	color:#e9ecef;
+
+}
+
+
+.avatar {
+  vertical-align: middle;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+   border: 2px solid #1fb864;
+}
+
+=======
+/*
+  Responsive layout
+*/
+>>>>>>> ef981ff92817ac244168c0626bdb8ce7b305e32f
