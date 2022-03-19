@@ -35,15 +35,17 @@ $paginas = ceil($paginas);
 
 $iniciar=($_GET['page_reviews']-1)*$comentarios_x_pagina;
 
-if(!$_GET){
-	header('location:index.php?page_reviews=1');
-}
+if ($comentarios_totales >0){
 
-if($_GET['page_reviews']>$paginas){
+	if(!$_GET){
 	header('location:index.php?page_reviews=1');
-}
-if($_GET['page_reviews']<0){
+
+die();
+	}
+if($_GET['page_reviews']>$paginas || $_GET['page_reviews']<=0){
 	header('location:index.php?page_reviews=1');
+
+die();}
 }
 
 function time_elapsed_string($datetime, $full = false) {
