@@ -95,63 +95,10 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"></script>
 	<link rel="shortcut icon" href="/img/favicon.ico">
-	<meta property="og:image" content="https://prueba.easycryptos.org/img/ogimage.png">
-	<meta property="og:image:secure_url" content="https://prueba.easycryptos.org/img/ogimage.png" />
-	<meta property="og:image:type" content="image/png" />
-	<meta property="og:image:width" content="400" />
-	<meta property="og:image:height" content="300" />
-	<meta property="og:image:alt" content="Colaborate with easycryptos" />
-	<meta property="og:title" content="Sistema de reseñas en PHP, AJAX y MySQL" />
-	<meta property="og:description" content="Sistema útil para cualquier sitio web que necesite recopilar reseñas u opiniones sobre determinado producto o servicio." />
-	<meta property="fb:app_id" content="307462680977545" />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://prueba.easycryptos.org" />
+	
  <head>
  <body>
- <div class="container">
-     <h1>Sistema de Reseñas // Review System</h1><hr>
-     <p><strong>Español:</strong>
-     Este sistema será útil para cualquier sitio web que necesite recopilar reseñas u opiniones sobre determinado producto o servicio.<br>
-     Toda la colaboración e ideas son bien recibidas, si usted desea aportar alguna idea no mencionada en el "TO DO" del repo, puede compartirla en esta plantilla como una reseña.<br><h5>Pendientes por realizar.</h5>
-     <h2><strong>Diseño:</strong></h2>
-     <li>Hacer el sistema 100% responsive.</li>
-     <li><del>Mostrar el avatar del usuario [Tomado desde gravatar] en el html.</del></li>
-     <li><del>Agregar los botones me gusta y no me gusta.</del>, queda pendiente limitar a una reacción por sesión o usuario.</li>
-     <li><del>Barras de progreso por colores según su valor: 5✩ Color verde, 4✩ y 3✩ color amarillo, 2 y 1 ✩ color rojo</li></del>
-     <h2><strong>Paginación:</strong></h2>
-     <li><del>Mostrar solo 10 resultados de reseñas.</li></del>
-     <li>Mostrar las reseñas según relevancia (las que más me gusta tengan, serán la mas relevantes), permitiendo al usuario ordenarlas por antiguedad, por mayor número de me gusta y mayor número de no me gusta.</li>
-     <li>Link o botón para editar las reseñas, como no hay login se haría la consulta en la base de datos con el correo al cual se enviaría un código o toekn de verificación. Una vez aprobado, el usuario podría recalificar, actualizar, su reseña, el score y demás [<u>Sugerencia por Clarisol Villa</u>].</li>
-     <li>Agregar el link "Ver más reseñas." </li>
-     <h2><strong>Seguridad:</strong></h2>
-     <li><del>Mejorar y hacer más segura la base de datos [proteción contra inyecciones SQL].</del></li>
-     <li>No mostrar URLs en los comentarios.</li>
-     <li><del>Cambiar el formato actual de fechas que tiene la cadena día, número, mes, año y hora por solo [horas], [días][semanas],[meses],[años] ejemplo: "Hace 8 días" o "Hace una semana" o "Hace un año".</del></li>
-     <h2><strong>Repositorio:</strong></h2><li> Si desea colaborar con este desarrollo puede clonar o descargar el repositorio haciendo <a href="https://github.com/EasycryptosTeam/review-system/tree/main" target="_blank">Click aquí</a>, para ver el resultado de como está quedando puede <a href="#result">Ver aquí el resultado.</a></li></p>
-   </p>
-     
-     
-     <hr><p><strong>English:</strong>
-     This system will be useful for any website that needs to collect reviews or opinions about a certain product or service.<br>
-     All collaboration and ideas are welcome, if you wish to contribute an idea not mentioned in the "TO DO" of the repo, you can writte it in this template as a review.<br> What is pending to be done is:
-     </p>
-     <h2><strong>Design:</strong></h2>
-     <li>Make the system 100% responsive.</li>
-     <li><del>Show the user's avatar [Taken from gravatar] in the html.</del></li>
-     <li><del>Add like and dislike buttons.</li></del>
-     <li><del>Progress bars by colors according to their value: 5✩ green color, 4✩ and 3✩ yellow color, 2 and 1 ✩ red color</li></del>
-     <h2><strong>Pagination:</strong></h2>
-     <li><del>Show only 10 review results.</li></del>
-     <li>Display the reviews according to relevance (the ones that I like the most, will be the most relevant), allowing the user to sort them by age, by the highest number of likes and the highest number of dislikes.</li>
-     <li>Link or button to edit the reviews, since there is no login, the query would be made in the database with the email to which a verification code or token would be sent. Once approved, the user could re-rate, update, their review, score, and more [<u>Suggested by Clarisol Villa</u>].</li>
-     <li>Add the "See more reviews" link.</li>
-     <h2><strong>Security:</strong></h2>
-     <li><del>Improve and make the database more secure [protection against SQL injections].</li></del>
-     <li>Don't show URLs in comments.</li>
-     <li><del>Change the current date format that has the string day, number, month, year and time to just [hours], [days][weeks],[months],[years] example: "8 days ago" or "A week ago" or "A year ago".</del></li>
-     <h2>Repository:</h2><li>If you want to collaborate with this development you can clone or download the repository doing <a href="https://github.com/EasycryptosTeam/review-system/tree/main" target="_blank">Click here</a>, To see how the result is looking, you can <a href="#result">See the result here.</a></li></p>
-     
- </div>
+
  <div class="container">
  <div class="card" id="result">
     		<div class="card-header">AWESOME TITLE</div>
