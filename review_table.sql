@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `review_table`
 --
 
-CREATE TABLE `review_table` (
+CREATE TABLE `avatrade` (
     `review_id` int(11) NOT NULL,
   `lang` varchar(6) NOT NULL,
   `user_name` varchar(200)  NOT NULL,
