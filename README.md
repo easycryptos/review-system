@@ -20,12 +20,13 @@ Every suggestinon is well received, let's make the best system all together.
      <li><del>Barras de progreso por colores según su valor: 5✩ Color verde, 4✩ y 3✩ color amarillo, 2 y 1 ✩ color rojo</li></del>
      <h2><strong>Paginación:</strong></h2>
      <li><del>Mostrar solo 10 resultados de reseñas.</li></del>
+     <li>Hacer responsive la paginación ocultando algunos enlaces formato 1 2 3 ... 9</li>
      <li>Mostrar las reseñas según relevancia (las que más me gusta tengan, serán la mas relevantes), permitiendo al usuario ordenarlas por antiguedad, por mayor número de me gusta y mayor número de no me gusta.</li>
      <li>Link o botón para editar las reseñas, como no hay login se haría la consulta en la base de datos con el correo al cual se enviaría un código o toekn de verificación. Una vez aprobado, el usuario podría recalificar, actualizar, su reseña, el score y demás [<u>Sugerencia por Clarisol Villa</u>].</li>
-     <li>Agregar el link "Ver más reseñas." </li>
+     <li><del>Agregar el link "Ver más reseñas." </del></li>
      <h2><strong>Seguridad:</strong></h2>
      <li><del>Mejorar y hacer más segura la base de datos [proteción contra inyecciones SQL].</del></li>
-     <li>No mostrar URLs en los comentarios.</li>
+     <li><del>mostrar URLs en los comentarios.</del></li>
      <li><del>Cambiar el formato actual de fechas que tiene la cadena día, número, mes, año y hora por solo [horas], [días][semanas],[meses],[años] ejemplo: "Hace 8 días" o "Hace una semana" o "Hace un año".</del></li>
      <h2><strong>Repositorio:</strong></h2><li> Si desea colaborar con este desarrollo puede clonar o descargar el repositorio haciendo <a href="https://github.com/EasycryptosTeam/review-system/tree/main" target="_blank">Click aquí</a>, para ver el resultado de como está quedando puede <a href="https://prueba.easycryptos.org/index.php?page_reviews=1#result" target="_blank">Ver aquí el resultado.</a></li></p>
   </div>
@@ -43,12 +44,13 @@ Every suggestinon is well received, let's make the best system all together.
      <li><del>Progress bars by colors according to their value: 5✩ green color, 4✩ and 3✩ yellow color, 2 and 1 ✩ red color</li></del>
      <h2><strong>Pagination:</strong></h2>
      <li><del>Show only 10 review results.</li></del>
+     <li>Make the pagination responsive hidding some links using this format 1 2 3 ... 9</li>
      <li>Display the reviews according to relevance (the ones that I like the most, will be the most relevant), allowing the user to sort them by age, by the highest number of likes and the highest number of dislikes.</li>
      <li>Link or button to edit the reviews, since there is no login, the query would be made in the database with the email to which a verification code or token would be sent. Once approved, the user could re-rate, update, their review, score, and more [<u>Suggested by Clarisol Villa</u>].</li>
-     <li>Add the "See more reviews" link.</li>
+     <li><del>Add the "See more reviews" link.</del></li>
      <h2><strong>Security:</strong></h2>
      <li><del>Improve and make the database more secure [protection against SQL injections].</li></del>
-     <li>Don't show URLs in comments.</li>
+     <li><del>Show URLs in comments.</del></li>
      <li><del>Change the current date format that has the string day, number, month, year and time to just [hours], [days][weeks],[months],[years] example: "8 days ago" or "A week ago" or "A year ago".</del></li>
      </div>
      <h2>Repository:</h2><li>If you want to collaborate with this development you can clone or download the repository doing <a href="https://github.com/EasycryptosTeam/review-system/tree/main" target="_blank">Click here</a>, To see how the result is looking, you can <a href="https://prueba.easycryptos.org/index.php?page_reviews=1#result" target="_blank">See the result here.</a></li></p>
