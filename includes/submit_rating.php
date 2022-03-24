@@ -14,9 +14,9 @@ if(isset($_POST["rating_data"]))
 	 
 
 	$data = array(
-		':lang'                 =>$lang,
+		':lang'                 =>	$lang,
 		':user_name'		=>	$_POST["user_name"],
-		':user_email'		=>  $emailfor,
+		':user_email'		=>	$emailfor,
 		':user_rating'		=>	$_POST["rating_data"],
 		':user_review'		=>	$_POST["user_review"],
 		':user_avatar'		=>	$_POST["user_avatar"],
