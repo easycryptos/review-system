@@ -12,7 +12,7 @@
 	}
 	
 	.nothing-yet {
-		background-image: url(<?php echo $fondos[array_rand($fondos)]?>);
+		background-image: url(https://cdn.dribbble.com/users/2446970/screenshots/5883361/media/c6adf54fc02fea4ac9e2e003bbf5370d.gif);
 		height: 400px;
 		background-position: center;
 	}
