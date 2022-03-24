@@ -1,8 +1,10 @@
 <?php
+
 $defaultTimeZone='America/Bogota';
 if(date_default_timezone_get()!=$defaultTimeZone) date_default_timezone_set($defaultTimeZone);
 include_once ($_SERVER['DOCUMENT_ROOT']."/includes/conexion.php");
 require ($_SERVER['DOCUMENT_ROOT']."/includes/submit_rating.php");
+
 function _date($format="r", $timestamp=false, $timezone=false)
 {
     $userTimezone = new DateTimeZone(!empty($timezone) ? $timezone : 'GMT+5');
@@ -11,60 +13,67 @@ function _date($format="r", $timestamp=false, $timezone=false)
     $offset = $userTimezone->getOffset($myDateTime);
     return date($format, ($timestamp!=false?(int)$timestamp:$myDateTime->format('U')) + $offset);
 }
-
-$lang="es";
 //likes
 
 require_once ($_SERVER['DOCUMENT_ROOT']."/includes/Post.class.php");
 $post = new Post();
 // Get posts data
+
 $posts = $post->getRows();
 
+$id = new Post();
+// Get posts data
 
-$sql = 'select * FROM avatrade ORDER BY review_id DESC';
-$sentencia =$pdo-> prepare($sql);
-$sentencia-> execute();
+$id = $id->getRows();
+//endslikes
 
-$resultado = $sentencia ->fetchAll();
-
-$comentarios_x_pagina= 10;
-
-$comentarios_totales = $sentencia->rowcount();
-$paginas = $comentarios_totales /$comentarios_x_pagina;
-$paginas = ceil($paginas);
-
-$iniciar=($_GET['page_reviews']-1)*$comentarios_x_pagina;
-
-if ($comentarios_totales >0){
-
-	if(!$_GET){
-	header('location:index.php?page_reviews=1');
-
-die();
-	}
-if($_GET['page_reviews']>$paginas || $_GET['page_reviews']<=0){
-	header('location:index.php?page_reviews=1');
-
-die();}
+function url($text)
+{
+	$text= html_entity_decode($text);
+	$text = "".$text;
+	$text = preg_replace('/(https{0,1}:\/\/[\w\-\.\/#?&=]*)/', '<a href="$1" target="_blank">($1)</a>',$text);
+	return $text;
 }
+
+$sql = "SELECT * FROM avatrade WHERE lang='$lang' ORDER BY review_id DESC";
+$sentence_a =$pdo-> prepare($sql);
+$sentence_a-> execute();
+
+$res = $sentence_a ->fetchAll();
+
+$per_page= 5;
+
+$totals = $sentence_a->rowcount();
+
+$pages = $totals /$per_page;
+$pages = ceil($pages);
+
+$start=($_GET['page_reviews']-1)*$per_page;
+
+
+
+if(!$_GET){
+	header('location:index.php?page_reviews=1');
+	}
+
+if($totals >= 1){
+	
+if($_GET['page_reviews']>$pages){
+	header('location:index.php?page_reviews=1');
+}
+if($_GET['page_reviews']<=0){
+	header('location:index.php?page_reviews=1');
+}
+ }
+
 
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
     $diff = $now->diff($ago);
-
     $diff->w = floor($diff->d / 7);
     $diff->d -= $diff->w * 7;
-
-    $string = array(
-        'y' => 'year',
-        'm' => 'month',
-        'w' => 'week',
-        'd' => 'day',
-        'h' => 'hour',
-        'i' => 'minute',
-        's' => 'second',
-    );
+    $string = array('y' => 'year', 'm' => 'month', 'w' => 'week', 'd' => 'day', 'h' => 'hour', 'i' => 'minute', 's' => 'second');
     foreach ($string as $k => &$v) {
         if ($diff->$k) {
             $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
@@ -72,33 +81,33 @@ function time_elapsed_string($datetime, $full = false) {
             unset($string[$k]);
         }
     }
-
     if (!$full) $string = array_slice($string, 0, 1);
     return $string ? implode(', ', $string) . ' ago' : 'Just now';
 }
 
-$sql_articulos= "SELECT * FROM avatrade ORDER BY review_id DESC LIMIT :iniciar, :narticulos";
-$sentencia_articulos = $pdo->prepare($sql_articulos);
-$sentencia_articulos->bindParam(':iniciar',$iniciar, PDO::PARAM_INT);
-$sentencia_articulos->bindParam(':narticulos',$comentarios_x_pagina, PDO::PARAM_INT);
-$sentencia_articulos->execute();
+$sql_rws= "SELECT * FROM avatrade WHERE lang='$lang' ORDER BY review_id DESC LIMIT :iniciar, :narticulos";
+$sentence_rws = $pdo->prepare($sql_rws);
+$sentence_rws->bindParam(':iniciar',$start, PDO::PARAM_INT);
+$sentence_rws->bindParam(':narticulos',$per_page, PDO::PARAM_INT);
+$sentence_rws->execute();
+sleep(1);
+$reviews =$sentence_rws->fetchAll();
 
-$resultado_comentarios =$sentencia_articulos->fetchAll();
 
 ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/style.css" /> 
+   <link rel="stylesheet" type="text/css" href="/css/style.css" /> 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"></script>
-	<link rel="shortcut icon" href="/img/favicon.ico">
-	
- <head>
+   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"></script>
+   <link rel="shortcut icon" href="/img/favicon.ico">
+   <script src="/js/shorten.js"></script>	
+ </head>
  <body>
 
  <div class="container">
@@ -117,7 +126,7 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
                             <i class="fas fa-star star-light mr-1 main_star"></i>
                             <i class="fas fa-star star-light mr-1 main_star"></i>
 	    				</div>
-    					<h3><span id="total_review">0</span> Review(s)</h3>
+    					<h3><span id="total_review"><?php if($totals==0){$numerate="No"; echo $numerate;} else { echo $totals;} ?></span> <?php if($totals ==1){$review="Review"; }else{ $review="Reviews";} echo $review  ?></h3>
     				</div>
     				<div class="col-sm-4">
     					<p>
@@ -171,94 +180,79 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
     	<div class="mt-5" id="review_content"></div>
     </div></div>
    <section class="reviews">
-						<?php foreach($resultado_comentarios as $comentarios):  ?>
-							<div class="container mt-5">
-								<div class="row mb-3">
-									<div class="col-sm-1">
-										<div class="rounded mx-auto d-block"><img class="avatar" src="<?php echo $comentarios['user_avatar']?>" />
-											<h6 class="text-center"><?php echo $comentarios['user_name']?></h6> </div>
-									</div>
-									<div class="col-sm-11">
-										<div class="card">
-											<div class="card-header">By <b><?php echo $comentarios['user_name']?></b> </div>
-											<div class="card-body">
-												<div class="us-rate">
-													<div class="pdt-rate">
-														<div class="pro-rating">
-															<div class="clearfix rating marT8 ">
-																<div class="rating-stars ">
-																	<div class="grey-stars"></div>
-																	<div class="filled-stars" style="width:<?= $comentarios['user_rating'] * 20 ?>%"> </div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<br>
-												<div class="us-cmt">
-													<p>
-														<?php echo $comentarios['user_review']?>
-													</p>
-												</div>
-											</div>
-											<div class="card-footer">
-												<p class="alignright">
-													<?php echo time_elapsed_string($comentarios['datetime'])?>
-														<p class="alignleft">
-															<p class="pull-left">
-																<!-- Like button --><span class="fa fa-thumbs-up" onClick="cwRating(<?php echo $comentarios['review_id']; ?>, 1, 'like_count<?php echo $comentarios['review_id']; ?>')"></span>&nbsp;
-																<!-- Like counter --><span class="counter" id="like_count<?php echo $comentarios['review_id']; ?>"><?php echo $comentarios['like_num']; ?></span>&nbsp;&nbsp;&nbsp;
-																<!-- Dislike button --><span class="fa fa-thumbs-down" onClick="cwRating(<?php echo $comentarios['review_id']; ?>, 0, 'dislike_count<?php echo $comentarios['review_id']; ?>')"></span>&nbsp;
-																<!-- Dislike counter --><span class="counter" id="dislike_count<?php echo $comentarios['review_id']; ?>"><?php echo $comentarios['dislike_num']; ?></span> <span  class="fas fa-edit" data-toggle="modal" data-target="#edit_modal"></span> </p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<?php endforeach ?>
-					</section>
-					
-				<?php
-				if (!empty($paginas)) {?>
-				<section class="pagination">
-					<div class="container mt-5">
-						<nav aria-label="">
-							<ul class="pagination">
-								<li class="page-item <?php echo $_GET['page_reviews']<=1? 'disabled' : ''?>"><a class="page-link" href="index.php?page_reviews=<?php echo ''.$_GET['page_reviews']-1 ?>">Anterior</a></li>
-								<?php  for($i=0;$i<$paginas;$i++): ?>
-									<li class="page-item <?php echo $_GET['page_reviews']==$i+1 ? 'active' : ''  ?>">
-										<a class="page-link" href="index.php?page_reviews=<?php echo $i+1?>">
-											<?php echo $i+1?>
-										</a>
-									</li>
-									<?php endfor?>
-										<li class="page-item <?php echo $_GET['page_reviews']>= $paginas? 'disabled' : ''?>"><a class="page-link" href="index.php?page_reviews=<?php echo ''.$_GET['page_reviews']+1 ?>">Siguiente</a></li>
-							</ul>
-						</nav>
-					</div>
-					<?php } else { ?>
-					<div class="container my-5">
-						<div class="card text-center">
-							<div class="card-header">
-								Seems there are no Reviews yet!
-							</div>
+	<?php foreach($reviews as $rws):  ?>
+		<div class="container mt-5">
+			<div class="row mb-3">
+				<div class="col-sm-1"> <img class="avatar" src="<?php echo $rws['user_avatar']?>" alt="Avatar de <?php echo $rws['user_name']?> en Gravatar.com" />
+					<h6 class="text-center"><?php echo $rws['user_name']?></h6> </div>
+				<div class="col-sm-11">
+					<div class="card">
+						<div class="card-header">By <b><?php echo $rws['user_name']?></b> </div>
 						<div class="card-body">
-						
-							<h5 class="card-title">Be the first person on review this item!</h5>
-							<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-							<a data-target="#review_modal" data-toggle="modal" name="add_review" id="add_review"  class="btn btn-primary">Review Now</a>
-							<div class="nothing-yet"></div>
+							<div class="rating-stars ">
+								<div class="grey-stars"></div>
+								<div class="filled-stars" style="width:<?= $rws['user_rating'] * 20 ?>%"> </div>
 							</div>
-						  <div class="card-footer text-muted">
-							
-						  </div>
+							<br>
+							<div class="comment-small">
+								<?php echo url($rws['user_review'])?>
+							</div>
+						</div>
+						<div class="card-footer">
+							<p class="alignright">
+								<?php echo time_elapsed_string($rws['datetime'])?>
+									<p class="alignleft">
+										<p class="pull-left">
+											<!-- Like button --><span class="fa fa-thumbs-up" onClick="cwRating(<?php echo $rws['review_id']; ?>, 1, 'like_count<?php echo $rws['review_id']; ?>')"></span>&nbsp;
+											<!-- Like counter --><span class="counter" id="like_count<?php echo $rws['review_id']; ?>"><?php echo $rws['like_num']; ?></span>&nbsp;&nbsp;&nbsp;
+											<!-- Dislike button --><span class="fa fa-thumbs-down" onClick="cwRating(<?php echo $rws['review_id']; ?>, 0, 'dislike_count<?php echo $rws['review_id']; ?>')"></span>&nbsp;
+											<!-- Dislike counter --><span class="counter" id="dislike_count<?php echo $rws['review_id']; ?>"><?php echo $rws['dislike_num']; ?></span>
+											<!--Edit---><span name="edit_review" value="edit_review" id="<?php echo $rws['review_id']?>" class="verify_data" data-toggle="modal" data-target="#verify_modal"><i class="fas fa-edit edit_data"></i></span> </p>
 						</div>
 					</div>
-					<?php } ?>
-	
-				</section>	
-			<div></div>
-			</body>
+				</div>
+			</div>
+		</div>
+		<?php endforeach ?>
+</section>
+<?php
+				if (!empty($pages)) {?>
+	<div class="row clearfix">
+		<div class="col-sm-12 text-center"> <span class="loading" style="display: none;"><img src="/img/more.gif" alt="cargando"></span> </div>
+	</div>
+	<section class="pagination">
+		<div class="container mt-5">
+			<nav data-pagination>
+				<ul class="pagination ">
+					<li class="page-item prev<?php echo $_GET['page_reviews']<=1? 'disabled' : ''?>"><a class="page-link" href="index.php?page_reviews=<?php echo ''.$_GET['page_reviews']-1 ?>">Anterior</a></li>
+					<?php  for($i=0;$i<$pages;$i++): ?>
+						<li class="page-item <?php echo $_GET['page_reviews']==$i+1 ? 'active' : ''  ?>">
+							<a class="page-link" href="index.php?page_reviews=<?php echo $i+1?>">
+								<?php echo $i+1?>
+							</a>
+						</li>
+						<?php endfor?>
+							<?php ?>
+								<li class="page-item next<?php echo $_GET['page_reviews']>= $pages? 'disabled' : ''?>"><a class="page-link" href="index.php?page_reviews=<?php echo ''.$_GET['page_reviews']+1 ?>">Siguiente</a></li>
+				</ul>
+			</nav>
+		</div>
+		<?php } else { ?>
+			<div class="container my-5">
+				<div class="card text-center">
+					<div class="card-header"> Seems there are no Reviews yet! </div>
+					<div class="card-body">
+						<h5 class="card-title">Be the first person on review this item!</h5>
+						<p class="card-text">With supporting text below as a natural lead-in to additional content.</p> <a data-target="#review_modal" data-toggle="modal" name="add_review" id="add_review" class="btn btn-primary">Review Now</a>
+						<div class="nothing-yet"></div>
+					</div>
+					<div class="card-footer text-muted"> </div>
+				</div>
+			</div>
+			<?php } ?>
+	</section>
+	<div></div>
+	</body>
 
 	</html>
 	<div id="review_modal" class="modal" tabindex="-1" role="dialog">
@@ -268,7 +262,7 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 					<h5 class="modal-title">Submit Review</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body"> <img id="avatar" src="https://s.gravatar.com/avatar/4960b5c8e92e02c3cc04280e7b0b259a?s=80" />
 					<h4 class="text-center mt-2 mb-4">
 	        		<i class="fas fa-star star-light submit_star mr-1" id="submit_star_1" data-rating="1"></i>
                     <i class="fas fa-star star-light submit_star mr-1" id="submit_star_2" data-rating="2"></i>
@@ -291,15 +285,77 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 			</div>
 		</div>
 	</div>
+	<!-- Edit Modal -->
+	<div id="edit_modal" class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">	Edit your Review</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+				</div>
+				<div class="modal-body"> <img id="avatar" src="https://s.gravatar.com/avatar/4960b5c8e92e02c3cc04280e7b0b259a?s=80" />
+					<h4 class="text-center mt-2 mb-4">
+	        		<i class="fas fa-star star-light edit_star mr-1" id="edit_star_1" data-rating="1"></i>
+                    <i class="fas fa-star star-light edit_star mr-1" id="edit_star_2" data-rating="2"></i>
+                    <i class="fas fa-star star-light edit_star mr-1" id="edit_star_3" data-rating="3"></i>
+                    <i class="fas fa-star star-light edit_star mr-1" id="edit_star_4" data-rating="4"></i>
+                    <i class="fas fa-star star-light edit_star mr-1" id="edit_star_5" data-rating="5"></i>
+	        	</h4>
+					<div class="form-group">
+						<input type="text" name="user_name" id="u_name" class="form-control" placeholder="Enter Your Name" required /> </div>
+					<div class="form-group">
+						<input type="text" name="user_email" id="u_email" class="form-control" placeholder="your-mail@domain.com" required /> </div>
+					<div class="form-group">
+						<textarea name="user_review" id="u_review" class="form-control" placeholder="Type Review Here" required></textarea>
+					</div>
+					<div class="form-group text-center mt-4">
+						<button type="button" class="btn btn-primary" id="update_review">Submit</button>
+					</div>
+					<label for="email">Enter a valid email, it's used to show your avatar and allows you to edit your rating in the future.</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--VALIDATION ------>
+	<div class="modal fade" id="verify_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Edit your Review</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+				</div>
+				<div class="modal-body">
+					<label for="email">Before you can edit, we need to verify if was you who wrote the review, please enter your email and press verify</label>
+					<div class="form-group">
+						<input type="text" name="user_mail" id="user-email_input" class="form-control" placeholder="your-mail@domain.com" required /> </div><span id="fb"></span> </div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="" onClick="edit_coment(<?php echo $rws['review_id']; ?>)" name="validate" id="validate" class="btn btn-primary">Verify</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<style>
-	.nothing-yet{
-  background-image: url(https://cdn.dribbble.com/users/926537/screenshots/8768655/media/0eb8fcc9f2b8a55c589cfabd6cc89d94.gif);
-   height: 400px;
-   background-position: center;
- }
-	.modal-title{
-		text-align:center;
+	.modal img {
+		vertical-align: middle;
+		width: 90px;
+		height: 90px;
+		border-radius: 50%;
+		border: 2px solid #1fb864;
+		margin-left: 190px;
+		margin-right: 190px;
 	}
+	
+	.nothing-yet {
+		background-image: url(<?php echo $fondos[array_rand($fondos)]?>);
+		height: 400px;
+		background-position: center;
+	}
+	
+	.modal-title {
+		text-align: center;
+	}
+	
 	.pull-left {
 		color: #11703b;
 	}
@@ -312,10 +368,6 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 	.glyphicon-thumbs-down:hover {
 		color: #E10000;
 		cursor: pointer;
-	}
-	
-	.counter {
-		color: #333333;
 	}
 	
 	.rating-stars {
@@ -347,260 +399,21 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 		line-height: 18px;
 	}
 	
-	.tri .filled-stars:before,
-	.tri .grey-stars:before {
-		font-size: 20px;
-		line-height: 23px;
+	a {
+		color: #0254EB
 	}
 	
-	.rnrn {
-		color: #888;
-		font-family: "lato";
-		font-weight: 700;
-		font-size: 1rem;
+	a:visited {
+		color: #0254EB
 	}
 	
-	.rpb {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	
-	.rnpb {
-		display: flex;
-		width: 100%
-	}
-	
-	.rnpb label:first-child {
-		margin-right: 5px;
-		margin-top: -2px;
-	}
-	
-	.rnpb label:last-child {
-		margin-left: 3px;
-		margin-top: -2px;
-	}
-	
-	.rnpb label i {
-		color: var(--primary-color)
-	}
-	
-	.ropb {
-		height: 10px;
-		width: 75%;
-		background-color: #f1f1f1;
-		position: relative;
-		margin-bottom: 10px;
-	}
-	
-	.ripb {
-		height: 100%;
-		background-color: #f7bf17;
-		border: 1px solid #a0a0a0;
-	}
-	
-	.rrb p {
-		font-size: 1rem;
-		font-weight: 500;
-		font-family: raleway;
-		margin-bottom: 10px;
-	}
-	
-	.rrb button {
-		width: 220px;
-		height: 40px;
-		background: var(--light-b);
-		color: var(--white);
-		border: 0;
+	a.morelink {
+		text-decoration: none;
 		outline: none;
-		font-size: 1.2rem;
-		font-family: "roboto", sans-serif;
-		box-shadow: 0px 2px 2px var(--light-b);
-		cursor: pointer;
 	}
 	
-	.rrb button:hover {
-		opacity: .9;
-	}
-	
-	.bri .filled-stars::before,
-	.bri .grey-stars::before {
-		font-size: 54px;
-	}
-	
-	.review-bg {
-		position: fixed;
-		background: rgba(0, 0, 0, .8);
-		width: 100%;
-		height: 100%;
-		top: 0;
-		left: 0;
-		z-index: 100;
-	}
-	
-	.review-modal {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 101;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-	}
-	
-	.rmp {
-		width: 400px;
-		height: auto;
-		background: var(--white);
-		border-radius: 10px;
-		animation: scaleUp .7s linear;
-		transition: all .7s ease-in-out;
-		z-index: 201;
-	}
-	
-	@keyframes scaleUp {
-		0% {
-			transform: scale(0.2);
-		}
-		25% {
-			transform: scale(.8);
-		}
-		50% {
-			transform: scale(1.2);
-		}
-		75% {
-			transform: scale(0.8);
-		}
-		100% {
-			transform: scale(1);
-		}
-	}
-	
-	.rpc {
-		text-align: right;
-		padding: 6px 15px;
-		font-size: 1.5rem;
-		color: var(--linear);
-	}
-	
-	.rpc span {
-		cursor: pointer;
-	}
-	
-	.rps {
-		padding-bottom: 20px;
-	}
-	
-	.rps i {
-		font-size: 1.6rem;
-		cursor: pointer;
-	}
-	
-	.rptf textarea,
-	.rptf input {
-		width: 80%;
-		outline: none;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		padding: 7px;
-		resize: none;
-		min-height: 80px;
-		margin-bottom: 10px;
-		font-family: "roboto", sans-serif;
-		font-size: .9rem;
-		font-weight: 100;
-		color: var(--t-color);
-	}
-	
-	.rptf input {
-		min-height: 10px !important;
-	}
-	
-	.rate-error {
-		font-size: 12px;
-		color: var(--r-color);
-		font-family: "roboto", sans-serif;
-		margin-bottom: 5px;
-		font-weight: 500;
-	}
-	
-	.rpsb button {
-		color: var(--white);
-		background: var(--light-b);
-		border: 0;
-		outline: none;
-		width: 80%;
-		height: 40px;
-		margin-bottom: 20px;
-		border-radius: 3px;
-		font-family: "roboto", sans-serif;
-		cursor: pointer;
-	}
-	
-	.rpsb button:hover {
-		opacity: .9;
-	}
-	
-	.bri {
-		overflow: hidden;
-		height: 100%
-	}
-	
-	.uscm-secs {
-		padding: 10px;
-		display: flex;
-		width: 100%;
-		height: 100%;
-		border-bottom: 1px solid #f1f1f1;
-	}
-	
-	.us-img {
-		width: 13%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	
-	.us-img p {
-		background: var(--light-b);
-		width: 45px;
-		height: 45px;
-		border-radius: 50%;
-		text-align: center;
-		line-height: 45px;
-		color: var(--white);
-		font-size: 1.1rem;
-		font-family: "roboto", sans-serif;
-		font-weight: 500;
-	}
-	
-	.uscms {
-		display: flex;
-		flex-direction: column;
-		width: 87%;
-	}
-	
-	.bri .filled-stars::before,
-	.bri .grey-stars::before {
-		font-size: 24px;
-	}
-	
-	.us-cmt p {
-		font-size: .9rem;
-		padding: 10px 10px 10px 0;
-		color: #333;
-		font-weight: 500;
-		font-family: raleway;
-	}
-	
-	.us-nm p {
-		font-size: .8rem;
-		font-weight: 500;
-		color: #888;
-		font-family: "roboto", sans-serif;
+	.morecontent span {
+		display: none;
 	}
 	
 	.progress-label-left {
@@ -633,10 +446,8 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 		height: 90px;
 		border-radius: 50%;
 		border: 2px solid #1fb864;
-	}
-	
-	.pagination {
-		text
+		margin-top: 45px;
+		margin-bottom: 25px;
 	}
 	
 	#one_star_progress {
@@ -658,6 +469,18 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 	#five_star_progress {
 		background-color: #1AB608!important;
 	}
+	
+	ul.pagination li a {
+		border-radius: 45px;
+	}
+	
+	ul.pagination li a prev {}
+	
+	ul.pagination li a next {}
+	
+	ul.pagination li a.active {
+		border-radius: 45px;
+	}
 	</style>
 	<script>
 	var gravatar_image_url;
@@ -669,6 +492,7 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 		gravatar_image_url = get_gravatar_image_url(email, 200);
 		$('#user_avatar').html(gravatar_image_url);
 		$('#image').attr('src', gravatar_image_url);
+		document.getElementById("avatar").src = gravatar_image_url;
 	});
 
 	function get_gravatar_image_url(email, size, default_image, allowed_rating, force_default) {
@@ -757,7 +581,7 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 				dataType: "JSON",
 				success: function(data) {
 					$('#average_rating').text(data.average_rating);
-					$('#total_review').text(data.total_review);
+					//$('#total_review').text(data.total_review);
 					var count_star = 0;
 					$('.main_star').each(function() {
 						count_star++;
@@ -785,15 +609,21 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 							html += '<div class="card">';
 							html += '<div class="card-header"><b>' + data.review_data[count].user_name + '</b></div>';
 							html += '<div class="card-body">';
-							for(var star = 1; star <= 5; star++) {
-								var class_name = '';
-								if(data.review_data[count].rating >= star) {
-									class_name = 'text-warning';
-								} else {
-									class_name = 'star-light';
+
+							function user_rating() {
+								for(let count = 0; count < data.review_data.length; count++) {
+									for(var star = 1; star <= 5; star++) {
+										var class_name = '';
+										if(data.review_data[count].rating >= star) {
+											class_name = 'text-warning';
+										} else {
+											class_name = 'star-light';
+										}
+										html += '<i class="fas fa-star ' + class_name + ' mr-1"></i>';
+									}
+									document.getElementById('user_rating').innerHTML = user_rating()
 								}
-								html += '<i class="fas fa-star ' + class_name + ' mr-1"></i>';
-							}
+							};
 							html += '<br />';
 							html += data.review_data[count].user_review;
 							html += '</div>';
@@ -823,5 +653,10 @@ $resultado_comentarios =$sentencia_articulos->fetchAll();
 			}
 		});
 	}
-	
+	$(document).ready(function() {
+		$(".comment").shorten();
+		$(".comment-small").shorten({
+			showChars: 200
+		});
+	});
 	</script>
