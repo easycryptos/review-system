@@ -10,7 +10,7 @@ class Post{
 
     private $dbName     = "easycryptos";
 
-    private $tblName    = "review_table";
+    private $tblName    = "avatrade";
 
     
 
