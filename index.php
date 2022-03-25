@@ -179,25 +179,55 @@ $reviews =$sentence_rws->fetchAll();
     	</div>
     	<div class="mt-5" id="review_content"></div>
     </div></div>
+<div class="container">
+	<div class="card">
+		<div class="card-body">
+			<div class=" alignright">
+				<div class="dropdown">
+				 Sort by:  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Dropdown button
+				  </button>
+				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item" href="#">Action</a>
+					<a class="dropdown-item" href="#">Another action</a>
+					<a class="dropdown-item" href="#">Something else here</a>
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
    <section class="reviews">
-	<?php foreach($reviews as $rws):  ?>
-		<div class="container mt-5">
-			<div class="row mb-3">
-				<div class="col-sm-1"> <img class="avatar" src="<?php echo $rws['user_avatar']?>" alt="Avatar de <?php echo $rws['user_name']?> en Gravatar.com" />
-					<h6 class="text-center"><?php echo $rws['user_name']?></h6> </div>
-				<div class="col-sm-11">
-					<div class="card">
-						<div class="card-header">By <b><?php echo $rws['user_name']?></b> </div>
-						<div class="card-body">
-							<div class="rating-stars ">
-								<div class="grey-stars"></div>
-								<div class="filled-stars" style="width:<?= $rws['user_rating'] * 20 ?>%"> </div>
-							</div>
-							<br>
-							<div class="comment-small">
-								<?php echo url($rws['user_review'])?>
-							</div>
-						</div>
+					
+<?php foreach($reviews as $rws):  ?>
+	<div class="container mt-5">
+		<div class="card">
+			<div class="card-header">Review by <b><?php echo $rws['user_name']?></b> 
+				<div class="alignright">	
+					<?php 
+					for($star = 1; $star <= 5; $star++) {
+					$class_name = '';
+					if($rws['user_rating'] >= $star) {
+					$class_name = 'text-warning';
+					} else {
+					$class_name = 'star-light';
+					}
+					echo  '<i class="fas fa-star ' . $class_name .' mr-1"></i>';
+					}
+					?>
+				</div>
+			</div>
+			<div class="card-body">
+				<img class="avatar alignleft" src="<?php echo $rws['user_avatar']?>" alt="Avatar de <?php echo $rws['user_name']?> en Gravatar.com"/>
+				<br>
+				<div class="review">
+					<div class="comment-small">
+						<?php echo url($rws['user_review'])?>
+					</div>
+
+				</div>
+			</div>
+		</div>
 						<div class="card-footer">
 							<p class="alignright">
 								<?php echo time_elapsed_string($rws['datetime'])?>
