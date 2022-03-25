@@ -1,26 +1,26 @@
 /*
   Responsive layout
 */
-.modal img {
-		vertical-align: middle;
+/*
+  Responsive layout
+*/
+.modal  img {
+	vertical-align: middle;
 		width: 90px;
 		height: 90px;
 		border-radius: 50%;
 		border: 2px solid #1fb864;
 		margin-left: 190px;
 		margin-right: 190px;
+}
+	.nothing-yet{
+	background-image: url(https://cdn.dribbble.com/users/926537/screenshots/8768655/media/0eb8fcc9f2b8a55c589cfabd6cc89d94.gif);
+	height: 400px;
+	background-position: center;
 	}
-	
-	.nothing-yet {
-		background-image: url(https://cdn.dribbble.com/users/2446970/screenshots/5883361/media/c6adf54fc02fea4ac9e2e003bbf5370d.gif);
-		height: 400px;
-		background-position: center;
+	.modal-title{
+		text-align:center;
 	}
-	
-	.modal-title {
-		text-align: center;
-	}
-	
 	.pull-left {
 		color: #11703b;
 	}
@@ -35,48 +35,17 @@
 		cursor: pointer;
 	}
 	
-	.rating-stars {
-		position: relative;
-		vertical-align: baseline;
-		color: #b9b9b9;
-		line-height: 10px;
-		float: left;
-	}
-	
-	.grey-stars {
-		height: 100%;
-	}
-	
-	.filled-stars {
-		position: absolute;
-		left: 0;
-		top: 0;
-		height: 100%;
-		overflow: hidden;
-		color: #f7bf17;
-	}
-	
-	.filled-stars:before,
-	.grey-stars:before {
-		content: "\2605\2605\2605\2605\2605";
-		font-size: 19px;
-		letter-spacing: 0px;
-		line-height: 18px;
-	}
-	
+		
 	a {
-		color: #0254EB
+	color: #0254EB
 	}
-	
 	a:visited {
 		color: #0254EB
 	}
-	
 	a.morelink {
-		text-decoration: none;
+		text-decoration:none;
 		outline: none;
 	}
-	
 	.morecontent span {
 		display: none;
 	}
@@ -111,10 +80,9 @@
 		height: 90px;
 		border-radius: 50%;
 		border: 2px solid #1fb864;
-		margin-top: 45px;
-		margin-bottom: 25px;
+		
 	}
-	
+	 
 	#one_star_progress {
 		background-color: #F70E0A!important;
 	}
@@ -134,15 +102,15 @@
 	#five_star_progress {
 		background-color: #1AB608!important;
 	}
-	
 	ul.pagination li a {
-		border-radius: 45px;
+    border-radius: 45px;
 	}
-	
-	ul.pagination li a prev {}
-	
-	ul.pagination li a next {}
-	
+	ul.pagination li a prev {
+   
+	}
+	ul.pagination li a next {
+   
+	}
 	ul.pagination li a.active {
-		border-radius: 45px;
+    border-radius: 45px;
 	}
